@@ -6,6 +6,7 @@ OEButton::OEButton(OEWindow* win)
 	_canBeClicked = true;
 	_winPtr = win;
 
+	_buttonSizes = { 0,0,0,0 };
 
 	win->addMouseClickListener([&](void* caller, void* arg)
 		{
@@ -39,6 +40,18 @@ OEButton::~OEButton()
 	_winPtr = nullptr;
 
 }
+
+void OEButton::setBounds(int x, int y, int width, int height)
+{
+	_buttonSizes = { x, y, width, height };
+}
+
+void OEButton::setLocation(int x, int y)
+{
+	_buttonSizes.x = x;
+	_buttonSizes.y = y;
+}
+
 
 void OEButton::changeTextureToPressed()
 {

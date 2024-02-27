@@ -93,7 +93,8 @@ public:
 	void setFrameTwoProperties(AllProperties newProperties);
 	AllProperties getFrameOneProperties() {};*/
 
-
+	std::weak_ptr<OEFrame> getOne() { return _frameOne; }
+	std::weak_ptr<OEFrame> getTwo() { return _frameTwo; }
 
 private:
 

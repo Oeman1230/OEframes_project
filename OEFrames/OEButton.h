@@ -31,10 +31,10 @@ public:
 
 public:
 
-	virtual void setBounds(int x, int y, int width, int height) { throw FunctionNotRealised(); }
-	virtual void setLocation(int x, int y) { throw FunctionNotRealised(); }
+	virtual void setBounds(int x, int y, int width, int height);
+	virtual void setLocation(int x, int y);
 
-	virtual SDL_Rect getSizes() { throw FunctionNotRealised(); }
+	virtual SDL_Rect getSizes() { return _buttonSizes; }
 
 public:
 
@@ -46,6 +46,7 @@ private:
 
 	bool _canBeClicked;
 
+	SDL_Rect _buttonSizes;
 
 	std::vector<BaseWindowObj::BaseListener> _onClickActions;
 
