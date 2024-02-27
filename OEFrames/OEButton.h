@@ -7,7 +7,7 @@
 #include "OEWindow.h"
 #include "OELabel.h"
 #include "BaseWindowObj.h"
-
+#include "FrameSwapper.h"
 
 class OEButton : public BaseWindowObj
 {
@@ -31,6 +31,13 @@ public:
 
 public:
 
+	virtual void setBounds(int x, int y, int width, int height) { throw FunctionNotRealised(); }
+	virtual void setLocation(int x, int y) { throw FunctionNotRealised(); }
+
+	virtual SDL_Rect getSizes() { throw FunctionNotRealised(); }
+
+public:
+
 	void repaint();
 
 private:
@@ -39,16 +46,17 @@ private:
 
 	bool _canBeClicked;
 
-	
 
 	std::vector<BaseWindowObj::BaseListener> _onClickActions;
 
-	std::shared_ptr<OEFrame> _currentTexture;
+	//First - unpressed texture
+	//Second - pressed texture
+	FrameSwapper _buttonTextures;
 
-
+	/*std::shared_ptr<OEFrame> _currentTexture;
 
 	std::shared_ptr<OEFrame> _pressedButtonTexture;
-	std::shared_ptr<OEFrame>  _unpressedButtonTexture;
+	std::shared_ptr<OEFrame>  _unpressedButtonTexture;*/
 
 
 

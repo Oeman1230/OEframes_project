@@ -5,7 +5,6 @@
 #include <exception>
 #include <memory>
 
-#include "OEWindow.h"
 #include "OEFrameWrapper.h"
 #include "OELabelWrapper.h"
 
@@ -26,38 +25,69 @@ public:
 
 	FrameSwapper()
 	{
-
+		
 	}
 	~FrameSwapper()
 	{
-		_currentFrame.reset();
+		
 		_frameOne.reset();
 		_frameTwo.reset();
 	}
 
 public:
 
-	std::weak_ptr<OEFrame> getCurrentFrame() { return _currentFrame; }
+	std::weak_ptr<OEFrame> getCurrentFrame() 
+	{
+		std::weak_ptr<OEFrame> currFrame;
 
-	void setFirstFrame(std::weak_ptr<OEFrame> newFrame) { _frameOne = newFrame; }
-	void setSecondFrame(std::weak_ptr<OEFrame> newFrame) { _frameTwo = newFrame; }
+		switch (_frameNum)
+		{
+		case 0:
+		{
+			currFrame = _frameOne;
+			break;
+		}
+		case 1:
+		{
+			currFrame = _frameTwo;
+			break;
+		}
+		default:
+			break;
+		}
+
+		if (currFrame.expired())
+		{
+			throw BaseWindowObj::BaseWinObjErr("FRAME_EXPIRED");
+		}
+
+		return currFrame;
+	}
+
+	void setFirstFrame(std::shared_ptr<OEFrame> newFrame) { _frameOne = newFrame; }
+	void setSecondFrame(std::shared_ptr<OEFrame> newFrame) { _frameTwo = newFrame; }
 
 	void swap()
 	{
 
 		if (_frameNum == 0)
 		{
-			_currentFrame = _frameTwo;
 			_frameNum = 1;
 		}
 		else
 		{
-			_currentFrame = _frameOne;
 			_frameNum = 0;
 		}
 	}
 
-
+	void swapToFirst()
+	{
+		_frameNum = 0;
+	}
+	void swapToSecond()
+	{
+		_frameNum = 1;
+	}
 
 	/*void setFrameOneProperties(AllProperties newProperties);
 	void setFrameTwoProperties(AllProperties newProperties);
@@ -69,13 +99,13 @@ private:
 
 	short int _frameNum = 0;
 
-	std::weak_ptr<OEFrame> _currentFrame;
+	//std::weak_ptr<OEFrame> _currentFrame;
 
 	//AllProperties _frameOneProp;
-	std::weak_ptr<OEFrame> _frameOne;
+	std::shared_ptr<OEFrame> _frameOne;
 
 	//AllProperties _frameTwoProp;
-	std::weak_ptr<OEFrame> _frameTwo;
+	std::shared_ptr<OEFrame> _frameTwo;
 
 
 };

@@ -1,12 +1,11 @@
 
 #include "OEButton.h"
 
-OEButton::OEButton(OEWindow* win) : OEFrame(win->getRend())
+OEButton::OEButton(OEWindow* win)
 {
+	_canBeClicked = true;
 	_winPtr = win;
 
-	_pressedButtonTexture = frameTexture;
-	_unpressedButtonTexture = frameTexture;
 
 	win->addMouseClickListener([&](void* caller, void* arg)
 		{
@@ -39,31 +38,26 @@ OEButton::~OEButton()
 {
 	_winPtr = nullptr;
 
-	_pressedButtonTexture.reset();
-	_unpressedButtonTexture.reset();
-
 }
 
 void OEButton::changeTextureToPressed()
 {
-	frameTexture = _pressedButtonTexture;
+	_buttonTextures.swapToSecond();
 
 }
 void OEButton::changeTextureToUnpressed()
 {
-	frameTexture = _unpressedButtonTexture;
+	_buttonTextures.swapToFirst();
 
 }
 
 void OEButton::setPressedButtonTexture(std::shared_ptr<OEFrame> newTexture)
 {
-	_pressedButtonTexture.reset();
-	_pressedButtonTexture = newTexture->getOETexture().lock();
+	_buttonTextures.setSecondFrame(newTexture);
 }
 void OEButton::setUnpressedButtonTexture(std::shared_ptr<OEFrame> newTexture)
 {
-	_unpressedButtonTexture.reset();
-	_unpressedButtonTexture = newTexture->getOETexture().lock();
+	_buttonTextures.setFirstFrame(newTexture);
 }
 
 
@@ -77,7 +71,6 @@ void OEButton::addClickListener(BaseWindowObj::BaseReaction action, void* caller
 
 }
 
-
 void OEButton::doClickActions(void* arg)
 {
 
@@ -86,6 +79,11 @@ void OEButton::doClickActions(void* arg)
 		it.reaction(it.listener, arg);
 	}
 
-
 }
 
+void OEButton::repaint()
+{
+	auto curFrame = _buttonTextures.getCurrentFrame().lock();
+	
+	curFrame->repaint();
+}
