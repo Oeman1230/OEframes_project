@@ -78,7 +78,7 @@ public:
 		void* listener;
 	};
 
-	//	BaseWindowObj::weak_ptr caller, void* arg
+	//	void* caller, void* arg
 	virtual void addEventsListener(BaseReaction func, void* caller);
 	virtual void notifyEventsListeners(void* keyEvent);
 

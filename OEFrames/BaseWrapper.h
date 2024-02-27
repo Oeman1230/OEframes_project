@@ -14,6 +14,9 @@ public:
 	BaseWrapper() : BaseWindowObj() { _window = nullptr; }
 	~BaseWrapper() { _window = nullptr; }
 
+	
+
+
 public:
 
 	void setWindow(OEWindow* win) { _window = win; };

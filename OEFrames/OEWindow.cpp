@@ -310,6 +310,10 @@ void OEWindow::startMainThread()
 	{
 
 	}
+	catch (BaseWindowObj::BaseWinObjErr& baseErr)
+	{
+		std::cout << "Window main: " << baseErr.body << "\n";
+	}
 	catch (...)
 	{
 		

@@ -17,6 +17,17 @@ public:
 	OEFrameWrapper();
 	~OEFrameWrapper();
 
+	//properties
+	// 
+	struct FrameProperties{
+		std::string _pathToTexture;
+		SDL_Point _onScreenPos = { 0,0 };
+		int _width = 0;
+		int _height = 0;
+		SDL_Color _bgColor = SDLColors::TRANSPARENT;
+		SDL_Color _fgColor = SDLColors::TRANSPARENT;
+	} ;
+
 private:
 
 	std::shared_ptr<OEFrame> _frame;
@@ -45,20 +56,13 @@ public:
 
 protected:
 
+	FrameProperties _frameProperties;
+
 	void _setFrame(std::shared_ptr<OEFrame> frame) { _frame = frame; }
 	void _applyProperties();
 
 
-	//properties
-
-	struct FrameProperties{
-		std::string _pathToTexture;
-		SDL_Point _onScreenPos = { 0,0 };
-		int _width = 0;
-		int _height = 0;
-		SDL_Color _bgColor = SDLColors::TRANSPARENT;
-		SDL_Color _fgColor = SDLColors::TRANSPARENT;
-	} _frameProperties;
+	
 
 };
 

@@ -15,6 +15,18 @@ public:
 	OELabelWrapper();
 	~OELabelWrapper();
 
+	struct LabelProperties
+	{
+		TTF_Font* _labelFont;
+		int _fontSize = 100;
+
+		std::string _labelText;
+		std::string _fontPath = std::string("C:/Windows/Fonts/times.ttf");
+
+		SDL_Color _textColor = SDLColors::BLACK;
+
+	} ;
+
 public:
 
 	void setFont(std::string fondDest);
@@ -30,20 +42,11 @@ public:
 
 protected:
 
+	LabelProperties _labelProperties;
 	
 	void _applyProperties();
 
-	struct LabelProperties
-	{
-		TTF_Font* _labelFont;
-		int _fontSize = 100;
-
-		std::string _labelText;
-		std::string _fontPath = std::string("C:/Windows/Fonts/times.ttf");
-
-		SDL_Color _textColor = SDLColors::BLACK;
-
-	} _labelProperties;
+	
 
 
 };
