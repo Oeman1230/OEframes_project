@@ -25,7 +25,17 @@ OEButton::OEButton(OEWindow* win)
 
 			if (button->isClickable())
 			{
-				button->changeTextureToUnpressed();
+				button->changeTextureToUnpressed();				
+			}
+
+		}, this, ClickManager::Mode::ON_BTN_UP);
+
+	win->addMouseClickListener([&](void* caller, void* arg)
+		{
+			OEButton* button = (OEButton*)caller;
+
+			if (button->isClickable())
+			{				
 				button->doClickActions(arg);
 			}
 

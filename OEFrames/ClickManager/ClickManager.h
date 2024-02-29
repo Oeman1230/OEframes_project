@@ -151,6 +151,12 @@ public:
 	void handleClick(SDL_Event* curEvent)
 	{
 
+		if (curEvent->type == SDL_MOUSEBUTTONDOWN)
+		{
+			_handleButtonDown(curEvent);
+
+		}
+
 		if (curEvent->type == SDL_MOUSEBUTTONUP)
 		{
 			_tryToFinishClick(curEvent);
@@ -160,16 +166,57 @@ public:
 			return;
 		}
 
-		if (curEvent->type == SDL_MOUSEBUTTONDOWN)
-		{
-			_handleButtonDown(curEvent);
-
-		}
-
 	}
 
 
 private:
+
+	BaseWindowObj::BaseListener _findObjByRectInContainer(std::vector<BaseWindowObj::BaseListener>& container, Box<int> position)
+	{
+		for (auto& it : container)
+		{
+			auto listener = (BaseWindowObj*)(it.listener);
+
+			SDL_Rect itRect = listener->getSizes();
+
+			Box<int> wrapBox = Box<int>(itRect.x, itRect.y, itRect.w, itRect.h);
+
+			if (wrapBox.contains(position) && listener->getActivityStatus())
+			{
+				return it;
+			}
+
+			
+
+		}
+
+		BaseWindowObj::BaseListener emptyListener;
+		emptyListener.listener = nullptr;
+		return emptyListener;
+
+	}
+
+	std::vector<BaseWindowObj::BaseListener> _findAllObjByRectInContainer(std::vector<BaseWindowObj::BaseListener>& container, Box<int> position)
+	{
+		std::vector<BaseWindowObj::BaseListener> foundListeners;
+
+		for (auto& it : container)
+		{
+			auto listener = (BaseWindowObj*)(it.listener);
+
+			SDL_Rect itRect = listener->getSizes();
+
+			Box<int> wrapBox = Box<int>(itRect.x, itRect.y, itRect.w, itRect.h);
+
+			if (wrapBox.contains(position) && listener->getActivityStatus())
+			{
+				foundListeners.push_back(it);
+			}
+		}
+		return foundListeners;
+	}
+
+
 
 	void _tryToFinishClick(SDL_Event* curEvent)
 	{
@@ -178,24 +225,76 @@ private:
 			return;
 		}
 
-		auto listener = (BaseWindowObj*)(_waitingToMouseUpListener.listener);
+		
+		Box<int> mouseBox = Box<int>(curEvent->button.x, curEvent->button.y, 1, 1);
 
-		SDL_Rect itRect = listener->getSizes();
+		if (_waitingToMouseUpListener.secondListener != nullptr)
+		{
+			_waitingToMouseUpListener.secondReaction(_waitingToMouseUpListener.secondListener, curEvent);
+		}
 
-		Box<int> wrapBox = Box<int>(itRect.x, itRect.y, itRect.w, itRect.h);
+		if (_waitingToMouseUpListener.elemBox.contains(mouseBox))
+		{
+			_waitingToMouseUpListener.reaction(_waitingToMouseUpListener.listener, curEvent);
+		}
+
+		
+
+		
+		_waitingToMouseUpListener = ClickListener();
+
+	}
+
+	void _handleButtonDown(SDL_Event* curEvent) 
+	{
 
 		Box<int> mouseBox = Box<int>(curEvent->button.x, curEvent->button.y, 1, 1);
 
-		if (wrapBox.contains(mouseBox))
-		{
-			_waitingToMouseUpListener.reaction(listener, curEvent);
-		}
-		_waitingToMouseUpListener = BaseWindowObj::BaseListener();
-
-	}
-	void _handleButtonDown(SDL_Event* curEvent) 
-	{
+		//auto clickElem = _findObjByRectInContainer(_clickListeners, mouseBox);
+		//BaseWindowObj::BaseListener clickElem;
+		ClickListener newListener;
+		newListener.secondListener = nullptr;
+		newListener.listener = nullptr;
+		//...
 		for (auto& it : _clickListeners)
+		{
+			auto listener = (BaseWindowObj*)(it.listener);
+
+			SDL_Rect itRect = listener->getSizes();
+			Box<int> wrapBox = Box<int>(itRect.x, itRect.y, itRect.w, itRect.h);
+
+			if (wrapBox.contains(mouseBox) && listener->getActivityStatus())
+			{
+				newListener.listener = it.listener;
+				newListener.reaction = it.reaction;
+				newListener.elemBox = wrapBox;
+			}
+		}
+		//...
+
+
+
+
+		if (newListener.listener != nullptr)
+		{
+			std::vector<BaseWindowObj::BaseListener>::iterator pressElem = std::find_if(_buttonUpListeners.begin(), _buttonUpListeners.end(),
+				[&](BaseWindowObj::BaseListener& elem) 
+				{
+					return (elem.listener == newListener.listener);
+				});
+
+			
+			if (pressElem != _buttonUpListeners.end())
+			{
+				newListener.secondListener = pressElem->listener;
+				newListener.secondReaction = pressElem->reaction;
+			}
+
+			_waitingToMouseUpListener = newListener;
+		}
+
+
+		/*for (auto& it : _clickListeners)
 		{
 			if (it.listener == nullptr)
 			{
@@ -208,15 +307,28 @@ private:
 
 			Box<int> wrapBox = Box<int>(itRect.x, itRect.y, itRect.w, itRect.h);
 
-			Box<int> mouseBox = Box<int>(curEvent->button.x, curEvent->button.y, 1, 1);
+			
 
 			if (wrapBox.contains(mouseBox))
 			{
+				DualListener newListener;
+				newListener.listener = it.listener;
+				newListener.reaction = it.reaction;
+
+
+
 				_waitingToMouseUpListener = it;
 			}
+		}*/
+
+		auto buttonDownElements = _findAllObjByRectInContainer(_buttonDownListeners, mouseBox);
+
+		for (auto& it : buttonDownElements)
+		{
+			it.reaction(it.listener, curEvent);
 		}
 
-		for (auto& it : _buttonDownListeners)
+		/*for (auto& it : _buttonDownListeners)
 		{
 			if (it.listener == nullptr)
 			{
@@ -235,14 +347,23 @@ private:
 			{
 				it.reaction(it.listener, curEvent);
 			}
-		}
+		}*/
 
 
 
 	};
 	void _handleButtonUp(SDL_Event* curEvent) 
 	{
-		for (auto& it : _buttonUpListeners)
+		Box<int> mouseBox = Box<int>(curEvent->button.x, curEvent->button.y, 1, 1);
+		auto buttonUpElements = _findAllObjByRectInContainer(_buttonUpListeners, mouseBox);
+
+		for (auto& it : buttonUpElements)
+		{
+			it.reaction(it.listener, curEvent);
+		}
+
+
+		/*for (auto& it : _buttonUpListeners)
 		{
 			if (it.listener == nullptr)
 			{
@@ -255,16 +376,23 @@ private:
 
 			Box<int> wrapBox = Box<int>(itRect.x, itRect.y, itRect.w, itRect.h);
 
-			Box<int> mouseBox = Box<int>(curEvent->button.x, curEvent->button.y, 1, 1);
+			
 
 			if (wrapBox.contains(mouseBox))
 			{
 				it.reaction(it.listener, curEvent);
 			}
-		}
+		}*/
 	};
 
-	BaseWindowObj::BaseListener _waitingToMouseUpListener;
+	struct ClickListener : public BaseWindowObj::BaseListener
+	{
+		void* secondListener;
+		BaseWindowObj::BaseReaction secondReaction;
+		Box<int> elemBox;
+	};
+
+	ClickListener _waitingToMouseUpListener;
 	std::vector<BaseWindowObj::BaseListener> _clickListeners;
 
 	std::vector<BaseWindowObj::BaseListener> _buttonDownListeners;

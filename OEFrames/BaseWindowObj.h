@@ -17,7 +17,7 @@ class BaseWindowObj
 {
 public:
 
-	BaseWindowObj() : isVisible(false){}
+	BaseWindowObj() : isVisible(false), isActive(true){}
 	virtual ~BaseWindowObj();
 
 	virtual void clear();
@@ -54,9 +54,13 @@ public:
 	virtual void setVisible(bool status) { isVisible = status; }
 	virtual void setText(std::string text) { throw FunctionNotRealised(); }
 
+	virtual void setActive(bool status) { isActive = status; }
+	
+
 public:
 
 	virtual bool getVisibilityStatus() { return isVisible; }
+	virtual bool getActivityStatus() { return isActive; }
 
 public:
 
@@ -84,6 +88,7 @@ public:
 
 protected:
 
+	bool isActive;
 	bool isVisible;
 
 protected:
