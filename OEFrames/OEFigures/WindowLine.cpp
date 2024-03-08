@@ -1,6 +1,8 @@
 
 #include "WindowLine.h"
 
+#include <SDL2_gfxPrimitives.h>
+
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -12,7 +14,7 @@ WindowLine::WindowLine(OEWindow* win) : WindowDrawPrimitive(win)
 WindowLine::~WindowLine()
 {
 
-
+	
 
 }
 
@@ -26,7 +28,7 @@ void WindowLine::setLocation(int x, int y)
 	_line.end.x = x + deltX;
 	_line.end.y = y + deltY;
 
-
+	
 	/*int minX = std::min(_line.start.x, _line.end.x);
 	int minY = std::min(_line.start.y, _line.end.y);
 
@@ -48,8 +50,8 @@ SDL_Rect WindowLine::getSizes()
 	int maxX = std::max(_line.start.x, _line.end.x);
 	int maxY = std::max(_line.start.y, _line.end.y);
 
-	int width = (maxX - minX);
-	int heigth = (maxY - minY);
+	int width = std::abs(maxX - minX);
+	int heigth = std::abs(maxY - minY);
 
 	return { minX, minY, width, heigth };
 
@@ -74,8 +76,10 @@ void WindowLine::repaint()
 	
 	//std::vector<SDL_FPoint> 
 	
+	GFX_thickLineRGBA(_window->getRend(), p1.x, p1.y, p2.x, p2.y, _line.thickness, color.r, color.g, color.b, color.a);
+
 	//SDL_RenderSetScale(_window->getRend(), _line.thickness, _line.thickness);
-	SDL_RenderDrawLineF(_window->getRend(), p1.x, p1.y, p2.x, p2.y);
+	//SDL_RenderDrawLineF(_window->getRend(), p1.x, p1.y, p2.x, p2.y);
 	
 	/*for (int i = 0; i < _line.thickness; ++i)
 	{
