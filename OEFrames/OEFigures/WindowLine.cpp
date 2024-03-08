@@ -6,7 +6,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-WindowLine::WindowLine(OEWindow* win) : WindowDrawPrimitive(win)
+WindowLine::WindowLine(IWindowActions* win) : WindowDrawPrimitive(win)
 {
 	_line.thickness = 1;
 }

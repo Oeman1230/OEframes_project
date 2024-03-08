@@ -36,12 +36,14 @@ public:
 	};
 
 	struct FunctionNotRealised : BaseWinObjErr { FunctionNotRealised() : BaseWinObjErr("Function_not_realised") {}; };
+	struct OldRealisation : BaseWinObjErr { OldRealisation() : BaseWinObjErr("Old_realisation_use") {}; };
 
 public:
 
 	virtual void setBounds(int x, int y, int width, int height) { throw FunctionNotRealised(); }
 	virtual void setLocation(int x, int y) { throw FunctionNotRealised(); }
 	virtual void setBorder(Color color, int thickness) { throw FunctionNotRealised(); }
+	virtual void setBorderActive(bool status) { throw FunctionNotRealised(); };
 
 	virtual SDL_Rect getSizes() { throw FunctionNotRealised(); }
 

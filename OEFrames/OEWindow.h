@@ -14,10 +14,12 @@
 #include "./SDL_EventsReader/SDL_EventsReader.h"
 #include "./ClickManager/ClickManager.h"
 
+#include "OEInterfaces/IWindowActions.h"
+
 #include "BaseWindowObj.h"
 
 
-class OEWindow : public BaseWindowObj
+class OEWindow : public BaseWindowObj, public IWindowActions
 {
 public:
 

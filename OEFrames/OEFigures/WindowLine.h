@@ -2,6 +2,7 @@
 #ifndef __OEF_LINE_H__
 #define __OEF_LINE_H__
 
+#include "../OEInterfaces/IWindowActions.h"
 #include "WindowDrawPrimitive.h"
 
 
@@ -9,7 +10,7 @@ class WindowLine : public WindowDrawPrimitive
 {
 public:
 
-	WindowLine(OEWindow* win);
+	WindowLine(IWindowActions* win);
 	~WindowLine();
  
 	struct LineProperties

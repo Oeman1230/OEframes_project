@@ -3,15 +3,16 @@
 #define __WINDOW_DRAW_PRIMITIVE_H__
 
 
+
 #include "../BaseWindowObj.h"
-#include "../OEWindow.h"
+#include "../OEInterfaces/IWindowActions.h"
 
 
 class WindowDrawPrimitive : public BaseWindowObj
 {
 public:
 
-	WindowDrawPrimitive(OEWindow* mainWin) : _window(mainWin){}
+	WindowDrawPrimitive(IWindowActions* mainWin) : _window(mainWin){}
 	virtual ~WindowDrawPrimitive()
 	{
 		_window = nullptr;
@@ -36,7 +37,7 @@ public:
 
 protected:
 
-	OEWindow* _window;
+	IWindowActions* _window;
 
 };
 

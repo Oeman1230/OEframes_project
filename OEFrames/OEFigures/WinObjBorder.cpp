@@ -1,7 +1,8 @@
 
+#include <SDLColors.h>
 #include "WinObjBorder.h"
 
-WinObjBorder::WinObjBorder(OEWindow* win) : WindowDrawPrimitive(win),
+WinObjBorder::WinObjBorder(IWindowActions* win) : WindowDrawPrimitive(win),
 			_upBorder(win), _rightBorder(win), _downBorder(win), _leftBorder(win)
 {
 	_border.lineThickness = 1;

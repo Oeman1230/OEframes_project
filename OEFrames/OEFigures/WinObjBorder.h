@@ -3,16 +3,18 @@
 #define __WINDOW_OBJECT_BORDER_H__
 
 
-#include "../OEWindow.h"
+#include "../OEInterfaces/IWindowActions.h"
+
 #include "WindowDrawPrimitive.h"
 #include "WindowLine.h"
 
 
+class OEWindow;
 class WinObjBorder : public WindowDrawPrimitive
 {
 public:
 
-	WinObjBorder(OEWindow* mainWin);
+	WinObjBorder(IWindowActions* mainWin);
 	~WinObjBorder();
 
 	struct BorderProperties

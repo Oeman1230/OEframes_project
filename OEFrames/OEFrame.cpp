@@ -1,16 +1,37 @@
 #include "OEFrame.h"
 #include <OET_Figures/OET_Square.h>
 
-OEFrame::OEFrame(SDL_Renderer* winRenderer)
+#include <SDLColors.h>
+
+OEFrame::OEFrame(IWindowActions* windowI) : BaseWindowObj()
 {
-	if (winRenderer == nullptr)
+	_win = windowI;
+
+	_border = std::make_shared<WinObjBorder>(_win);
+	_border->setBounds(0, 0, 0, 0);
+	_border->setBorder(SDLColors::TRANSPARENT, 1);
+
+	_winRenderer = _win->getRend();
+
+	frameTexture = std::make_shared<OETexture>(_winRenderer);
+
+}
+
+OEFrame::OEFrame(SDL_Renderer* winRenderer) : BaseWindowObj()
+{
+
+	auto err = BaseWindowObj::OldRealisation();
+	err.body.append("\tOLD_OEFRAME_REALISATION");
+	throw err;
+
+	/*if (winRenderer == nullptr)
 	{
 		throw BaseWinObjErr("NO_RENDERER");
 	}
 
 	_winRenderer = winRenderer;
 
-	frameTexture = std::make_shared<OETexture>(winRenderer);
+	frameTexture = std::make_shared<OETexture>(winRenderer);*/
 	//borderTexture = std::make_shared<OETexture>(winRenderer);
 	//borderThickness = 0;
 
@@ -37,12 +58,15 @@ void OEFrame::setBounds(int x, int y, int width, int height)
 	frameTexture->setOnScreenPos(x, y);
 	frameTexture->setWidth(width);
 	frameTexture->setHeight(height);
+
+	_border->setBounds(x, y, width, height);
 }
 
 void OEFrame::setLocation(int x, int y)
 {
 	frameTexture->setOnScreenPos(x, y);
 
+	_border->setLocation(x, y);
 }
 
 //void OEFrame::_createBorder()
@@ -66,16 +90,11 @@ void OEFrame::setLocation(int x, int y)
 //}
 //
 
-//
-//void OEFrame::setBorder(Color color, int thickness)
-//{
-//	
-//
-//	TSquare tempSquare = TSquare(_winRenderer);
-//
-//	
-//
-//}
+
+void OEFrame::setBorder(Color color, int thickness)
+{
+	_border->setBorder(color, thickness);
+}
 
 void OEFrame::setBackground(Color color)
 {
@@ -122,6 +141,8 @@ void OEFrame::repaint()
 	SDL_Rect onScreenTextureRect = frameTexture->getOnScreenRect();
 
 	SDL_RenderCopy(_winRenderer, thisTexture, 0, &onScreenTextureRect);
+
+	_border->repaint();
 
 }
 
