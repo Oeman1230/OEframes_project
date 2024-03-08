@@ -3,9 +3,8 @@
 #include <OESDL_Module.h>
 #include <SDLColors.h>
 
-OELabel::OELabel(SDL_Renderer* rend) : OEFrame(rend)
+OELabel::OELabel(IWindowActions* window) : OEFrame(window)
 {
-
 	setFont(_fontPath);
 
 	//_textBackground = std::make_shared<OETexture>(rend);
@@ -13,6 +12,14 @@ OELabel::OELabel(SDL_Renderer* rend) : OEFrame(rend)
 	_textColor = SDLColors::BLACK;
 	_bgColor = SDLColors::BLACK;
 	_bgColor.a = 0;
+}
+
+OELabel::OELabel(SDL_Renderer* rend) : OEFrame(rend)
+{
+	auto err = BaseWindowObj::OldRealisation();
+	err.body.append("\tOLD_OELABEL_REALISATION");
+	throw err;
+	
 
 
 }
@@ -128,7 +135,7 @@ void OELabel::setText(std::string newText)
 
 void OELabel::repaint()
 {
-	OEFrame::repaint();
+	//OEFrame::repaint();
 
 
 	SDL_Texture* thisBack = frameTexture->getSDL_Texture();
@@ -146,6 +153,8 @@ void OELabel::repaint()
 	SDL_Rect onScreenTextureRect = frameTexture->getOnScreenRect();
 
 	SDL_RenderCopy(_winRenderer, thisBack, 0, &onScreenTextureRect);
+
+	_border->repaint();
 
 }
 

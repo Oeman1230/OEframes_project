@@ -2,6 +2,7 @@
 #ifndef __OELABEL_H__
 #define __OELABEL_H__
 
+#include "OEInterfaces/IWindowActions.h"
 #include "BaseWindowObj.h"
 #include "OEFrame.h"
 #include <OESDL_Module.h>
@@ -10,6 +11,7 @@ class OELabel : public OEFrame
 {
 public:
 
+	OELabel(IWindowActions* window);
 	OELabel(SDL_Renderer* rend);
 	~OELabel();
 
